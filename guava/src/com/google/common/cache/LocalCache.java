@@ -51,11 +51,12 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -157,7 +158,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
 
     // Fields
 
-    static final Logger logger = Logger.getLogger(LocalCache.class.getName());
+    static final Logger logger = LoggerFactory.getLogger(LocalCache.class);
 
     /**
      * Mask value for indexing into segments. The upper bits of a key's hash code are used to choose
@@ -1935,7 +1936,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
             try {
                 removalListener.onRemoval(notification);
             } catch (Throwable e) {
-                logger.log(Level.WARNING, "Exception thrown by removal listener", e);
+                logger.warn("Exception thrown by removal listener", e);
             }
         }
     }
@@ -2149,20 +2150,25 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
         V get(K key, int hash, CacheLoader<? super K, V> loader) throws ExecutionException {
             checkNotNull(key);
             checkNotNull(loader);
+            logger.info("get() for key: " + key + ", count: " + count);
             try {
                 if (count != 0) { // read-volatile
+                    logger.info("get() for key: " + key + " --> 'count != 0'");
                     // don't call getLiveEntry, which would ignore loading values
                     ReferenceEntry<K, V> e = getEntry(key, hash);
                     if (e != null) {
+                        logger.info("get() for key: " + key + " --> 'ReferenceEntry != null'");
                         long now = map.ticker.read();
                         V value = getLiveValue(e, now);
                         if (value != null) {
+                            logger.info("get() for key: " + key + " --> 'value != null'");
                             recordRead(e, now);
                             statsCounter.recordHits(1);
                             return scheduleRefresh(e, key, hash, value, now, loader);
                         }
                         ValueReference<K, V> valueReference = e.getValueReference();
                         if (valueReference.isLoading()) {
+                            logger.info("get() for key: " + key + " --> 'valueReference.isLoading()' waiting");
                             return waitForLoadingValue(e, key, valueReference);
                         }
                     }
@@ -2189,7 +2195,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
             LoadingValueReference<K, V> loadingValueReference = null;
             boolean createNewEntry = true;
 
+            logger.info("lockedGetOrLoad() for key: " + key);
             lock();
+            logger.info("lockedGetOrLoad() for key: " + key + " --> already got lock!");
             try {
                 // re-read ticker once inside the lock
                 long now = map.ticker.read();
@@ -2206,6 +2214,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                         valueReference = e.getValueReference();
                         if (valueReference.isLoading()) {
                             createNewEntry = false;
+                            logger.info("isLoading()...'createNewEntry = false', key: " + key);
                         } else {
                             V value = valueReference.get();
                             if (value == null) {
@@ -2236,6 +2245,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                     loadingValueReference = new LoadingValueReference<K, V>();
 
                     if (e == null) {
+                        logger.info("lockedGetOrLoad() for key: " + key + " --> 'e == null'");
                         e = newEntry(key, hash, first);
                         e.setValueReference(loadingValueReference);
                         table.set(index, e);
@@ -2254,14 +2264,20 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                     // detected. This may be circumvented when an entry is copied, but will fail fast most
                     // of the time.
                     synchronized (e) {
-                        return loadSync(key, hash, loadingValueReference, loader);
+                        logger.info("lockedGetOrLoad() for key: " + key + " --> 'before loadSync'");
+                        V v = loadSync(key, hash, loadingValueReference, loader);
+                        logger.info("lockedGetOrLoad() for key: " + key + " --> 'after loadSync'");
+                        return v;
                     }
                 } finally {
                     statsCounter.recordMisses(1);
                 }
             } else {
                 // The entry already exists. Wait for loading.
-                return waitForLoadingValue(e, key, valueReference);
+                logger.info("lockedGetOrLoad() for key: " + key + " --> 'before Wait for loading'");
+                V v = waitForLoadingValue(e, key, valueReference);
+                logger.info("lockedGetOrLoad() for key: " + key + " --> 'after Wait for loading'");
+                return v;
             }
         }
 
@@ -2382,7 +2398,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                     try {
                         getAndRecordStats(key, hash, loadingValueReference, loadingFuture);
                     } catch (Throwable t) {
-                        logger.log(Level.WARNING, "Exception thrown during refresh", t);
+                        logger.warn("Exception thrown during refresh", t);
                         loadingValueReference.setException(t);
                     }
                 }
@@ -3576,7 +3592,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                 stopwatch.start();
                 V previousValue = oldValue.get();
                 if (previousValue == null) {
+                    logger.info("loadFuture for key: " + key + " --> 'previousValue == null'");
                     V newValue = loader.load(key);
+                    logger.info("loadFuture for key: " + key + " --> newValue: " + newValue);
                     return set(newValue) ? futureValue : Futures.immediateFuture(newValue);
                 }
                 ListenableFuture<V> newValue = loader.reload(key, previousValue);

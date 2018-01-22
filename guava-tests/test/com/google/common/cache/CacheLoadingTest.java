@@ -66,7 +66,7 @@ public class CacheLoadingTest extends TestCase {
   public void setUp() throws Exception {
     super.setUp();
     logHandler = new TestLogHandler();
-    LocalCache.logger.addHandler(logHandler);
+    //LocalCache.logger.addHandler(logHandler);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class CacheLoadingTest extends TestCase {
     super.tearDown();
     // TODO(cpovirk): run tests in other thread instead of messing with main thread interrupt status
     currentThread().interrupted();
-    LocalCache.logger.removeHandler(logHandler);
+    //LocalCache.logger.removeHandler(logHandler);
   }
 
   private Throwable popLoggedThrowable() {

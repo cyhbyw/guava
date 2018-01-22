@@ -191,13 +191,13 @@ public class LocalCacheTest extends TestCase {
   public void setUp() throws Exception {
     super.setUp();
     logHandler = new TestLogHandler();
-    LocalCache.logger.addHandler(logHandler);
+    //LocalCache.logger.addHandler(logHandler);
   }
 
   @Override
   public void tearDown() throws Exception {
     super.tearDown();
-    LocalCache.logger.removeHandler(logHandler);
+    //LocalCache.logger.removeHandler(logHandler);
   }
 
   private Throwable popLoggedThrowable() {
