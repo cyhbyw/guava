@@ -17,6 +17,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.util.ConcurrentModificationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.CheckReturnValue;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Ascii;
@@ -28,14 +38,6 @@ import com.google.common.base.Ticker;
 import com.google.common.cache.AbstractCache.SimpleStatsCounter;
 import com.google.common.cache.AbstractCache.StatsCounter;
 import com.google.common.cache.LocalCache.Strength;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.ConcurrentModificationException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.CheckReturnValue;
 
 /**
  * <p>A builder of {@link LoadingCache} and {@link Cache} instances having any combination of the
@@ -370,7 +372,8 @@ public final class CacheBuilder<K, V> {
      * @throws IllegalStateException if a concurrency level was already set
      */
     public CacheBuilder<K, V> concurrencyLevel(int concurrencyLevel) {
-        checkState(this.concurrencyLevel == UNSET_INT, "concurrency level was already set to %s", this.concurrencyLevel);
+        checkState(this.concurrencyLevel == UNSET_INT, "concurrency level was already set to %s",
+                this.concurrencyLevel);
         checkArgument(concurrencyLevel > 0);
         this.concurrencyLevel = concurrencyLevel;
         return this;
@@ -473,7 +476,8 @@ public final class CacheBuilder<K, V> {
     public <K1 extends K, V1 extends V> CacheBuilder<K1, V1> weigher(Weigher<? super K1, ? super V1> weigher) {
         checkState(this.weigher == null);
         if (strictParsing) {
-            checkState(this.maximumSize == UNSET_INT, "weigher can not be combined with maximum size", this.maximumSize);
+            checkState(this.maximumSize == UNSET_INT, "weigher can not be combined with maximum size",
+                    this.maximumSize);
         }
 
         // safely limiting the kinds of caches this can produce

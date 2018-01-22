@@ -1,22 +1,22 @@
 /*
  * Copyright (C) 2007 The Guava Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.google.common.base;
 
+import javax.annotation.Nullable;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import javax.annotation.Nullable;
 
 /**
  * Legacy version of {@link java.util.function.Function}.
@@ -43,22 +43,22 @@ import javax.annotation.Nullable;
 @GwtCompatible
 @FunctionalInterface
 public interface Function<F, T> extends java.util.function.Function<F, T> {
-  @Override
-  @Nullable
-  @CanIgnoreReturnValue // TODO(kevinb): remove this
-  T apply(@Nullable F input);
+    @Override
+    @Nullable
+    @CanIgnoreReturnValue // TODO(kevinb): remove this
+    T apply(@Nullable F input);
 
-  /**
-   * <i>May</i> return {@code true} if {@code object} is a {@code Function} that behaves identically
-   * to this function.
-   *
-   * <p><b>Warning: do not depend</b> on the behavior of this method.
-   *
-   * <p>Historically, {@code Function} instances in this library have implemented this method to
-   * recognize certain cases where distinct {@code Function} instances would in fact behave
-   * identically. However, as code migrates to {@code java.util.function}, that behavior will
-   * disappear. It is best not to depend on it.
-   */
-  @Override
-  boolean equals(@Nullable Object object);
+    /**
+     * <i>May</i> return {@code true} if {@code object} is a {@code Function} that behaves identically
+     * to this function.
+     *
+     * <p><b>Warning: do not depend</b> on the behavior of this method.
+     *
+     * <p>Historically, {@code Function} instances in this library have implemented this method to
+     * recognize certain cases where distinct {@code Function} instances would in fact behave
+     * identically. However, as code migrates to {@code java.util.function}, that behavior will
+     * disappear. It is best not to depend on it.
+     */
+    @Override
+    boolean equals(@Nullable Object object);
 }

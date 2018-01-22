@@ -1,27 +1,26 @@
 /*
  * Copyright (C) 2007 The Guava Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.google.common.collect;
 
-import com.google.common.annotations.GwtCompatible;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nullable;
+
+import com.google.common.annotations.GwtCompatible;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * A {@code Multimap} that can hold duplicate key-value pairs and that maintains
@@ -41,59 +40,59 @@ import javax.annotation.Nullable;
  */
 @GwtCompatible
 public interface ListMultimap<K, V> extends Multimap<K, V> {
-  /**
-   * {@inheritDoc}
-   *
-   * <p>Because the values for a given key may have duplicates and follow the
-   * insertion ordering, this method returns a {@link List}, instead of the
-   * {@link java.util.Collection} specified in the {@link Multimap} interface.
-   */
-  @Override
-  List<V> get(@Nullable K key);
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Because the values for a given key may have duplicates and follow the
+     * insertion ordering, this method returns a {@link List}, instead of the
+     * {@link java.util.Collection} specified in the {@link Multimap} interface.
+     */
+    @Override
+    List<V> get(@Nullable K key);
 
-  /**
-   * {@inheritDoc}
-   *
-   * <p>Because the values for a given key may have duplicates and follow the
-   * insertion ordering, this method returns a {@link List}, instead of the
-   * {@link java.util.Collection} specified in the {@link Multimap} interface.
-   */
-  @CanIgnoreReturnValue
-  @Override
-  List<V> removeAll(@Nullable Object key);
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Because the values for a given key may have duplicates and follow the
+     * insertion ordering, this method returns a {@link List}, instead of the
+     * {@link java.util.Collection} specified in the {@link Multimap} interface.
+     */
+    @CanIgnoreReturnValue
+    @Override
+    List<V> removeAll(@Nullable Object key);
 
-  /**
-   * {@inheritDoc}
-   *
-   * <p>Because the values for a given key may have duplicates and follow the
-   * insertion ordering, this method returns a {@link List}, instead of the
-   * {@link java.util.Collection} specified in the {@link Multimap} interface.
-   */
-  @CanIgnoreReturnValue
-  @Override
-  List<V> replaceValues(K key, Iterable<? extends V> values);
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Because the values for a given key may have duplicates and follow the
+     * insertion ordering, this method returns a {@link List}, instead of the
+     * {@link java.util.Collection} specified in the {@link Multimap} interface.
+     */
+    @CanIgnoreReturnValue
+    @Override
+    List<V> replaceValues(K key, Iterable<? extends V> values);
 
-  /**
-   * {@inheritDoc}
-   *
-   * <p><b>Note:</b> The returned map's values are guaranteed to be of type
-   * {@link List}. To obtain this map with the more specific generic type
-   * {@code Map<K, List<V>>}, call {@link Multimaps#asMap(ListMultimap)}
-   * instead.
-   */
-  @Override
-  Map<K, Collection<V>> asMap();
+    /**
+     * {@inheritDoc}
+     *
+     * <p><b>Note:</b> The returned map's values are guaranteed to be of type
+     * {@link List}. To obtain this map with the more specific generic type
+     * {@code Map<K, List<V>>}, call {@link Multimaps#asMap(ListMultimap)}
+     * instead.
+     */
+    @Override
+    Map<K, Collection<V>> asMap();
 
-  /**
-   * Compares the specified object to this multimap for equality.
-   *
-   * <p>Two {@code ListMultimap} instances are equal if, for each key, they
-   * contain the same values in the same order. If the value orderings disagree,
-   * the multimaps will not be considered equal.
-   *
-   * <p>An empty {@code ListMultimap} is equal to any other empty {@code
-   * Multimap}, including an empty {@code SetMultimap}.
-   */
-  @Override
-  boolean equals(@Nullable Object obj);
+    /**
+     * Compares the specified object to this multimap for equality.
+     *
+     * <p>Two {@code ListMultimap} instances are equal if, for each key, they
+     * contain the same values in the same order. If the value orderings disagree,
+     * the multimaps will not be considered equal.
+     *
+     * <p>An empty {@code ListMultimap} is equal to any other empty {@code
+     * Multimap}, including an empty {@code SetMultimap}.
+     */
+    @Override
+    boolean equals(@Nullable Object obj);
 }

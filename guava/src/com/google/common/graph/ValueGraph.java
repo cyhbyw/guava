@@ -1,24 +1,22 @@
 /*
  * Copyright (C) 2016 The Guava Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.google.common.graph;
 
+import javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.CompatibleWith;
-import javax.annotation.Nullable;
 
 /**
  * An interface for <a
@@ -108,46 +106,46 @@ import javax.annotation.Nullable;
 @Beta
 public interface ValueGraph<N, V> extends Graph<N> {
 
-  /**
-   * If there is an edge connecting {@code nodeU} to {@code nodeV}, returns the non-null value
-   * associated with that edge.
-   *
-   * <p>In an undirected graph, this is equal to {@code edgeValue(nodeV, nodeU)}.
-   *
-   * @throws IllegalArgumentException if there is no edge connecting {@code nodeU} to {@code nodeV}.
-   */
-  V edgeValue(@CompatibleWith("N") Object nodeU, @CompatibleWith("N") Object nodeV);
+    /**
+     * If there is an edge connecting {@code nodeU} to {@code nodeV}, returns the non-null value
+     * associated with that edge.
+     *
+     * <p>In an undirected graph, this is equal to {@code edgeValue(nodeV, nodeU)}.
+     *
+     * @throws IllegalArgumentException if there is no edge connecting {@code nodeU} to {@code nodeV}.
+     */
+    V edgeValue(@CompatibleWith("N") Object nodeU, @CompatibleWith("N") Object nodeV);
 
-  /**
-   * If there is an edge connecting {@code nodeU} to {@code nodeV}, returns the non-null value
-   * associated with that edge; otherwise, returns {@code defaultValue}.
-   *
-   * <p>In an undirected graph, this is equal to {@code edgeValueOrDefault(nodeV, nodeU,
-   * defaultValue)}.
-   */
-  V edgeValueOrDefault(@CompatibleWith("N") Object nodeU, @CompatibleWith("N") Object nodeV,
-      @Nullable V defaultValue);
+    /**
+     * If there is an edge connecting {@code nodeU} to {@code nodeV}, returns the non-null value
+     * associated with that edge; otherwise, returns {@code defaultValue}.
+     *
+     * <p>In an undirected graph, this is equal to {@code edgeValueOrDefault(nodeV, nodeU,
+     * defaultValue)}.
+     */
+    V edgeValueOrDefault(@CompatibleWith("N") Object nodeU, @CompatibleWith("N") Object nodeV,
+            @Nullable V defaultValue);
 
-  //
-  // ValueGraph identity
-  //
+    //
+    // ValueGraph identity
+    //
 
-  /**
-   * For the default {@link ValueGraph} implementations, returns true if {@code this == object}
-   * (reference equality). External implementations are free to define this method as they see fit,
-   * as long as they satisfy the {@link Object#equals(Object)} contract.
-   *
-   * <p>To compare two {@link ValueGraph}s based on their contents rather than their references, see
-   * {@link Graphs#equivalent(ValueGraph, ValueGraph)}.
-   */
-  @Override
-  boolean equals(@Nullable Object object);
+    /**
+     * For the default {@link ValueGraph} implementations, returns true if {@code this == object}
+     * (reference equality). External implementations are free to define this method as they see fit,
+     * as long as they satisfy the {@link Object#equals(Object)} contract.
+     *
+     * <p>To compare two {@link ValueGraph}s based on their contents rather than their references, see
+     * {@link Graphs#equivalent(ValueGraph, ValueGraph)}.
+     */
+    @Override
+    boolean equals(@Nullable Object object);
 
-  /**
-   * For the default {@link ValueGraph} implementations, returns {@code
-   * System.identityHashCode(this)}. External implementations are free to define this method as they
-   * see fit, as long as they satisfy the {@link Object#hashCode()} contract.
-   */
-  @Override
-  int hashCode();
+    /**
+     * For the default {@link ValueGraph} implementations, returns {@code
+     * System.identityHashCode(this)}. External implementations are free to define this method as they
+     * see fit, as long as they satisfy the {@link Object#hashCode()} contract.
+     */
+    @Override
+    int hashCode();
 }

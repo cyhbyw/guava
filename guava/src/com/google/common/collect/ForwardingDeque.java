@@ -1,25 +1,23 @@
 /*
  * Copyright (C) 2012 The Guava Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.google.common.collect;
 
-import com.google.common.annotations.GwtIncompatible;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Deque;
 import java.util.Iterator;
+
+import com.google.common.annotations.GwtIncompatible;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * A deque which forwards all its method calls to another deque. Subclasses
@@ -43,103 +41,103 @@ import java.util.Iterator;
 @GwtIncompatible
 public abstract class ForwardingDeque<E> extends ForwardingQueue<E> implements Deque<E> {
 
-  /** Constructor for use by subclasses. */
-  protected ForwardingDeque() {}
+    /** Constructor for use by subclasses. */
+    protected ForwardingDeque() {}
 
-  @Override
-  protected abstract Deque<E> delegate();
+    @Override
+    protected abstract Deque<E> delegate();
 
-  @Override
-  public void addFirst(E e) {
-    delegate().addFirst(e);
-  }
+    @Override
+    public void addFirst(E e) {
+        delegate().addFirst(e);
+    }
 
-  @Override
-  public void addLast(E e) {
-    delegate().addLast(e);
-  }
+    @Override
+    public void addLast(E e) {
+        delegate().addLast(e);
+    }
 
-  @Override
-  public Iterator<E> descendingIterator() {
-    return delegate().descendingIterator();
-  }
+    @Override
+    public Iterator<E> descendingIterator() {
+        return delegate().descendingIterator();
+    }
 
-  @Override
-  public E getFirst() {
-    return delegate().getFirst();
-  }
+    @Override
+    public E getFirst() {
+        return delegate().getFirst();
+    }
 
-  @Override
-  public E getLast() {
-    return delegate().getLast();
-  }
+    @Override
+    public E getLast() {
+        return delegate().getLast();
+    }
 
-  @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
-  @Override
-  public boolean offerFirst(E e) {
-    return delegate().offerFirst(e);
-  }
+    @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
+    @Override
+    public boolean offerFirst(E e) {
+        return delegate().offerFirst(e);
+    }
 
-  @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
-  @Override
-  public boolean offerLast(E e) {
-    return delegate().offerLast(e);
-  }
+    @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
+    @Override
+    public boolean offerLast(E e) {
+        return delegate().offerLast(e);
+    }
 
-  @Override
-  public E peekFirst() {
-    return delegate().peekFirst();
-  }
+    @Override
+    public E peekFirst() {
+        return delegate().peekFirst();
+    }
 
-  @Override
-  public E peekLast() {
-    return delegate().peekLast();
-  }
+    @Override
+    public E peekLast() {
+        return delegate().peekLast();
+    }
 
-  @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
-  @Override
-  public E pollFirst() {
-    return delegate().pollFirst();
-  }
+    @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
+    @Override
+    public E pollFirst() {
+        return delegate().pollFirst();
+    }
 
-  @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
-  @Override
-  public E pollLast() {
-    return delegate().pollLast();
-  }
+    @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
+    @Override
+    public E pollLast() {
+        return delegate().pollLast();
+    }
 
-  @CanIgnoreReturnValue
-  @Override
-  public E pop() {
-    return delegate().pop();
-  }
+    @CanIgnoreReturnValue
+    @Override
+    public E pop() {
+        return delegate().pop();
+    }
 
-  @Override
-  public void push(E e) {
-    delegate().push(e);
-  }
+    @Override
+    public void push(E e) {
+        delegate().push(e);
+    }
 
-  @CanIgnoreReturnValue
-  @Override
-  public E removeFirst() {
-    return delegate().removeFirst();
-  }
+    @CanIgnoreReturnValue
+    @Override
+    public E removeFirst() {
+        return delegate().removeFirst();
+    }
 
-  @CanIgnoreReturnValue
-  @Override
-  public E removeLast() {
-    return delegate().removeLast();
-  }
+    @CanIgnoreReturnValue
+    @Override
+    public E removeLast() {
+        return delegate().removeLast();
+    }
 
-  @CanIgnoreReturnValue
-  @Override
-  public boolean removeFirstOccurrence(Object o) {
-    return delegate().removeFirstOccurrence(o);
-  }
+    @CanIgnoreReturnValue
+    @Override
+    public boolean removeFirstOccurrence(Object o) {
+        return delegate().removeFirstOccurrence(o);
+    }
 
-  @CanIgnoreReturnValue
-  @Override
-  public boolean removeLastOccurrence(Object o) {
-    return delegate().removeLastOccurrence(o);
-  }
+    @CanIgnoreReturnValue
+    @Override
+    public boolean removeLastOccurrence(Object o) {
+        return delegate().removeLastOccurrence(o);
+    }
 }
