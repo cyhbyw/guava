@@ -24,6 +24,9 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -41,6 +44,8 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 @Beta
 @GwtCompatible(emulated = true)
 public final class Uninterruptibles {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Uninterruptibles.class);
 
     // Implementation Note: As of 3-7-11, the logic for each blocking/timeout
     // methods is identical, save for method being invoked.
@@ -135,6 +140,7 @@ public final class Uninterruptibles {
      */
     @CanIgnoreReturnValue
     public static <V> V getUninterruptibly(Future<V> future) throws ExecutionException {
+        LOGGER.info("getUninterruptibly");
         boolean interrupted = false;
         try {
             while (true) {
