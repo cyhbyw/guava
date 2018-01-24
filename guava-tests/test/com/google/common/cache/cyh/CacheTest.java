@@ -4,6 +4,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -12,7 +15,7 @@ import com.google.common.cache.CacheBuilder;
  */
 public class CacheTest {
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheTest.class);
     private Cache<Integer, Double> cache = CacheBuilder.newBuilder().maximumSize(1000).build();
 
 
@@ -34,25 +37,25 @@ public class CacheTest {
             new Thread(() -> {
                 int key = 2 * x;
                 for (int i = 0; i < key; i++) {
-                    System.out.println(Thread.currentThread().getName() + " --> " + retrieveValue(i));
+                    LOGGER.info("retrieved value() {} --> {}", i, retrieveValue(i));
                 }
             }, "thread_" + x + "_" + threadCount).start();
         }
     }
 
     private Double retrieveValue(final int key) {
-        System.out.println(Thread.currentThread().getName() + " is trying to get value for " + key);
+        LOGGER.info("Trying_to_get_value_for " + key);
         try {
             return cache.get(key, new Callable<Double>() {
                 @Override
                 public Double call() throws InterruptedException {
-                    System.out.println(Thread.currentThread().getName() + " really obtain key: " + key);
+                    LOGGER.info("Really_obtain_key: " + key);
                     TimeUnit.SECONDS.sleep(1);
                     return Math.random();
                 }
             });
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            LOGGER.error("cache.get() throws Exception", e);
         }
         return null;
     }
