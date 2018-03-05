@@ -25,10 +25,19 @@ public class CacheTestWithException {
     }
 
     private void run() throws InterruptedException {
-        multiThreadGet();
+        /**
+         * 第一次由于第一根线程抛出异常，导致所有线程均无法获取值
+         * 但是，这并不影响第二次的逻辑，即是说，第二次还是能正常获取值（前提是没有异常）
+         */
+        multiThreadGet("A");
+        TimeUnit.SECONDS.sleep(10);
+        /**
+         * 第二次可以正常获取到值（前提是没有异常）
+         */
+        multiThreadGet("B");
     }
 
-    private void multiThreadGet() {
+    private void multiThreadGet(String type) {
         int threadCount = 2;
         while (threadCount-- > 0) {
             new Thread(() -> {
@@ -36,7 +45,7 @@ public class CacheTestWithException {
                 for (int i = 0; i < key; i++) {
                     LOGGER.info("retrieved value() {} --> {}", i, retrieveValue(i));
                 }
-            }, "thread_" + threadCount).start();
+            }, type + "_thread_" + threadCount).start();
         }
     }
 
