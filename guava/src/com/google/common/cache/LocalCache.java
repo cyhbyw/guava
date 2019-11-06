@@ -2150,7 +2150,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
         V get(K key, int hash, CacheLoader<? super K, V> loader) throws ExecutionException {
             checkNotNull(key);
             checkNotNull(loader);
-            logger.info("get() for key: {}, count: {}", key, count);
+            logger.debug("get_for_key: {}, count: {}", key, count);
             try {
                 if (count != 0) { // read-volatile
                     logger.info("'count != 0' for key: {}", key);
@@ -2196,9 +2196,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
             LoadingValueReference<K, V> loadingValueReference = null;
             boolean createNewEntry = true;
 
-            logger.info("lockedGetOrLoad() for key: {}", key);
+            logger.debug("locked_get_or_load_for_key: {}", key);
             lock();
-            logger.info("lockedGetOrLoad() already got lock for key: {}", key);
+            logger.debug("already_got_lock_for_key: {}", key);
             try {
                 // re-read ticker once inside the lock
                 long now = map.ticker.read();
@@ -2215,7 +2215,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                         valueReference = e.getValueReference();
                         if (valueReference.isLoading()) {
                             createNewEntry = false;
-                            logger.info("'valueReference.isLoading()' && 'createNewEntry = false' for key: {}", key);
+                            logger.debug("Value_reference_is_loading, so_do_not_create_new_entry_for_key: {}", key);
                         } else {
                             V value = valueReference.get();
                             if (value == null) {
@@ -2246,11 +2246,11 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                     loadingValueReference = new LoadingValueReference<K, V>();
 
                     if (e == null) {
-                        logger.info("'e == null' && 'newEntry()' for key: {}", key);
+                        logger.debug("ReferenceEntry_is_null_for_key: {}", key);
                         e = newEntry(key, hash, first);
                         e.setValueReference(loadingValueReference);
                         table.set(index, e);
-                        logger.info("'e == null' && 'newEntry()' end for key: {}", key);
+                        logger.debug("ReferenceEntry_is_null_for_key_end: {}", key);
                     } else {
                         e.setValueReference(loadingValueReference);
                     }
@@ -2266,9 +2266,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                     // detected. This may be circumvented when an entry is copied, but will fail fast most
                     // of the time.
                     synchronized (e) {
-                        logger.info("'loadSync()' for key: {}", key);
+                        logger.debug("synchronized_load_for_key: {}", key);
                         V v = loadSync(key, hash, loadingValueReference, loader);
-                        logger.info("'loadSync()' end for key: {}", key);
+                        logger.debug("synchronized_load_for_key_end: {}, value={}", key, v);
                         return v;
                     }
                 } finally {
@@ -2276,9 +2276,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                 }
             } else {
                 // The entry already exists. Wait for loading.
-                logger.info("'waitForLoadingValue()' for key: {}", key);
+                logger.debug("wait_for_loading_value_for_key: {}", key);
                 V v = waitForLoadingValue(e, key, valueReference);
-                logger.info("'waitForLoadingValue()' end for key: {}", key);
+                logger.debug("END_wait_for_loading_value_for_key: {}", key);
                 return v;
             }
         }
@@ -3594,9 +3594,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                 stopwatch.start();
                 V previousValue = oldValue.get();
                 if (previousValue == null) {
-                    logger.info("loadFuture for key: " + key + " --> 'previousValue == null'");
+                    logger.debug("previous_value_is_null, will_load_new_value_for_key: {}", key);
                     V newValue = loader.load(key);
-                    logger.info("loadFuture for key: " + key + " --> newValue: " + newValue);
+                    logger.debug("loaded_new_value_for_key: {}, newValue: {}", key, newValue);
                     return set(newValue) ? futureValue : Futures.immediateFuture(newValue);
                 }
                 ListenableFuture<V> newValue = loader.reload(key, previousValue);

@@ -37,7 +37,7 @@ public class CacheTest {
             new Thread(() -> {
                 int key = 2 * x;
                 for (int i = 0; i < key; i++) {
-                    LOGGER.info("retrieved value() {} --> {}", i, retrieveValue(i));
+                    LOGGER.info("retrieved_value_for: {} --> {}", i, retrieveValue(i));
                 }
             }, "thread_" + x + "_" + threadCount).start();
         }
