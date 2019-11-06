@@ -2152,22 +2152,22 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
             logger.debug("get_for_key: {}, count: {}", key, count);
             try {
                 if (count != 0) { // read-volatile
-                    logger.info("'count != 0' for key: {}", key);
+                    logger.debug("count_is_not_zero_for_key: {}", key);
                     // don't call getLiveEntry, which would ignore loading values
                     ReferenceEntry<K, V> e = getEntry(key, hash);
                     if (e != null) {
-                        logger.info("'ReferenceEntry != null' for key: {}", key);
+                        logger.debug("ReferenceEntry_is_not_null_for_key: {}", key);
                         long now = map.ticker.read();
                         V value = getLiveValue(e, now);
                         if (value != null) {
-                            logger.info("'value != null' for key: {}", key);
+                            logger.debug("CACHE_HIT_for_key: {}", key);
                             recordRead(e, now);
                             statsCounter.recordHits(1);
                             return scheduleRefresh(e, key, hash, value, now, loader);
                         }
                         ValueReference<K, V> valueReference = e.getValueReference();
                         if (valueReference.isLoading()) {
-                            logger.info("'valueReference.isLoading()' for key: {}", key);
+                            logger.debug("value_reference_is_loading_for_key: {}", key);
                             return waitForLoadingValue(e, key, valueReference);
                         }
                     }
