@@ -18,7 +18,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.cache.CacheBuilder.NULL_TICKER;
 import static com.google.common.cache.CacheBuilder.UNSET_INT;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
-import static com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 import java.io.IOException;
@@ -2415,7 +2414,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
                 ListenableFuture<V> newValue) throws ExecutionException {
             V value = null;
             try {
-                value = getUninterruptibly(newValue);
+                value = Uninterruptibles.getUninterruptibly(newValue);
                 if (value == null) {
                     throw new InvalidCacheLoadException("CacheLoader returned null for key " + key + ".");
                 }
@@ -3641,7 +3640,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
 
         @Override
         public V waitForValue() throws ExecutionException {
-            return getUninterruptibly(futureValue);
+            return Uninterruptibles.getUninterruptibly(futureValue);
         }
 
         @Override
